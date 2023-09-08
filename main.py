@@ -161,34 +161,32 @@ def enroll_student_command(student_id, course_id, grade):
     if enrollment:
         print(f"Enrolled student ID={student_id} in course ID={course_id} with grade={grade}")
     else:
-        print("Failed to enroll the student.")
+        print("The student was enrolled successfully.")
 
 @cli.command()
-@click.argument('student_id', type=int)
-@click.argument('course_id', type=int)
-def view_enrollment_command(student_id, course_id):
-    """View enrollment details for a student in a course."""
+@click.argument('enrollment_id', type=int)
+def view_enrollment_command(enrollment_id):
+    """View details of a specific enrollment by ID."""
     db = SessionLocal()
-    enrollment = get_enrollment_by_id(db, student_id, course_id)
+    enrollment = get_enrollment_by_id(db, enrollment_id)
     db.close()
     if enrollment:
-        print(f"Enrollment - Student ID: {student_id}, Course ID: {course_id}, Grade: {enrollment.grade}")
+        print(f"Enrollment ID: {enrollment.id}, Student ID: {enrollment.student_id}, Course ID: {enrollment.course_id}, Grade: {enrollment.grade}")
     else:
-        print(f"Enrollment not found for Student ID {student_id} in Course ID {course_id}.")
+        print(f"Enrollment with ID {enrollment_id} not found.")
 
 @cli.command()
-@click.argument('student_id', type=int)
-@click.argument('course_id', type=int)
+@click.argument('enrollment_id', type=int)
 @click.argument('grade', type=float)
-def update_enrollment_command(student_id, course_id, grade):
-    """Update an enrollment record for a student in a course."""
+def update_enrollment_command(enrollment_id, grade):
+    """Update enrollment details (e.g., grades)."""
     db = SessionLocal()
-    updated_enrollment = update_enrollment(db, student_id, course_id, grade)
+    updated_enrollment = update_enrollment(db, enrollment_id, grade)
     db.close()
     if updated_enrollment:
-        print(f"Updated enrollment - Student ID: {student_id}, Course ID: {course_id}, Grade: {grade}")
+        print(f"Updated Enrollment ID {enrollment_id} with Grade {grade}.")
     else:
-        print(f"Enrollment not found for Student ID {student_id} in Course ID {course_id}.")
+        print(f"Enrollment with ID {enrollment_id} not found.")
 
 @cli.command()
 @click.argument('student_id', type=int)

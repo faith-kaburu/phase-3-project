@@ -34,11 +34,13 @@ def update_enrollment(db: Session, enrollment_id: int, grade: float):
         db.refresh(enrollment)
     return enrollment
 
-def delete_enrollment(db: Session, enrollment_id: int) -> bool:
-    """Delete an enrollment by ID."""
-    enrollment = db.query(Enrollment).filter(Enrollment.id == enrollment_id).first()
+
+def delete_enrollment(db, student_id, course_id):
+    enrollment = db.query(Enrollment).filter_by(student_id=student_id, course_id=course_id).first()
     if enrollment:
         db.delete(enrollment)
         db.commit()
         return True
-    return False
+    else:
+        return False
+
